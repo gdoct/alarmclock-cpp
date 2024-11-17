@@ -15,6 +15,18 @@ SevenSegmentDisplay::SevenSegmentDisplay(const std::vector<uint> &segments_pins,
     clear();
 }
 
+std::unordered_map<char, uint8_t> SevenSegmentDisplay::segment_map = {
+    {' ', 0b00000000}, {'0', 0b00111111}, {'1', 0b00000110}, {'2', 0b01011011},
+    {'3', 0b01001111}, {'4', 0b01100110}, {'5', 0b01101101}, {'6', 0b01111101},
+    {'7', 0b00000111}, {'8', 0b01111111}, {'9', 0b01101111}, {'.', 0b10000000},
+    {'A', 0b01110111}, {'b', 0b01111100}, {'C', 0b00111001}, {'d', 0b01011110},
+    {'E', 0b01111001}, {'F', 0b01110001}, {'g', 0b01101111}, {'H', 0b01110110},
+    {'I', 0b00110000}, {'j', 0b00001110}, {'L', 0b00111000}, {'n', 0b01010100},
+    {'o', 0b01011100}, {'p', 0b01110011}, {'Q', 0b01101011}, {'r', 0b01010000},
+    {'S', 0b01101101}, {'t', 0b01111000}, {'u', 0b00111110}, {'y', 0b01101110},
+    {'Z', 0b01011011}
+};
+
 void SevenSegmentDisplay::clear() {
     for (auto pin : segments_pins) {
         gpio_put(pin, 0);
@@ -41,7 +53,7 @@ void SevenSegmentDisplay::write(const std::string &str) {
 void SevenSegmentDisplay::test_segments() {
     for (size_t i = 0; i < segments_pins.size(); ++i) {
         clear();
-        printf("Testing segment %zu (pin %u)\n", i, segments_pins[i]);
+        log("Testing segment %zu (pin %u)", i, segments_pins[i]);
         for (size_t c = 0; c < 4; c++) {
             activate_digit(c);
             gpio_put(segments_pins[i], 1);

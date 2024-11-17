@@ -61,7 +61,7 @@ void AlarmClockController::handle_light_button_interrupt() {
 void AlarmClockController::handle_mode_button_interrupt() {
     state.last_button_press_time = mode_btn->last_button_press_time();
     int newmode = state.increment_mode();
-    printf("mode is now %s\n", AlarmClockStateNames[newmode]);
+    log("mode is now %s", AlarmClockStateNames[newmode]);
 }
 
 void AlarmClockController::handle_increase_button_interrupt() {

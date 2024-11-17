@@ -31,13 +31,13 @@ void Button::gpio_callback(uint gpio, uint32_t events) {
 void Button::process_events(void) {
     size_t eventcount = event_queue.size();
     if (eventcount > 0){
-        printf("processing %d button events.", eventcount); 
+        log("processing %d button events.", eventcount); 
     }
     while (!event_queue.empty()) {
         Event event = event_queue.front();
         event_queue.pop();
         if (BUTTON_INSTANCES.find(event.pin) != BUTTON_INSTANCES.end()) {
-            BUTTON_INSTANCES[event.pin]->callback();
+            BUTTON_INSTANCES[event.pin]->handle_interrupt();
         }
     }
 }
@@ -52,21 +52,22 @@ bool Button::is_debounced(Time &now) {
         last_press_time = now;
         return true;
     }
-    printf("button bounce detected");
+    log("button bounce detected");
     return false;
 }
 
 void Button::handle_interrupt() {
     Time now = Time::now();
-    if (is_held() || !is_debounced(now)) {
+    if (!is_debounced(now)) {
+        log("debounced button click");
         return;
     }
 
-    printf("%s button press\n", name);
+    log("%s button press", name);
     callback();
 
     if (allow_hold) {
-        printf("   %s button is held down:\n", name);
+        log("   %s button is held down:", name);
         uint64_t hold_start_ms = now.to_total_ms();
         while (gpio_get(pin) == 0) {
             Time current_time = Time::now();
@@ -74,7 +75,7 @@ void Button::handle_interrupt() {
 
             if (elapsed_ms > BUTTON_HOLD_INITIAL_DELAY_MS) { // 300 ms hold delay before auto-trigger
                 //if (elapsed_ms % 10 == 0) { // no idea why this value is so low
-                printf("   .. calling %s button hold callback\n", name);
+                log("   .. calling %s button hold callback", name);
                 callback();
                //}
             }
@@ -83,7 +84,7 @@ void Button::handle_interrupt() {
             }
             sleep_us(BUTTON_HOLD_REPEAT_DELAY_MS);
         }
-        printf("done handling %s button hold\n", name);
+        log("done handling %s button hold", name);
     }
     last_press_time = Time::now();
 }

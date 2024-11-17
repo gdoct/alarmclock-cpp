@@ -12,7 +12,6 @@ get_hardware_time_u64(void) {
 
 void 
 Time::reset_hardware_time(void) {
-    printf("init: resetting time\n");
     BOOT_TIME_OFFSET = get_hardware_time_u64();
 }
 

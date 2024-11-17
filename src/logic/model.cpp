@@ -1,4 +1,5 @@
 #include "model.h"
+#include "util/logger.h"
 
 int AlarmClockModel::increment_mode() {
     state = static_cast<AlarmClockStates>((state + 1) %
@@ -9,7 +10,7 @@ int AlarmClockModel::increment_mode() {
     } else if (state == BLANK || state == DISPLAY_TIME) {
         flash_display = false;
     }
-    printf("state is now %d\n", state);
+    log("state is now %d", state);
     return state;
 }
 
@@ -29,7 +30,7 @@ bool AlarmClockModel::check_alarm() {
 }
 
 void AlarmClockModel::raise_alarm() {
-    printf("ALARM!\n");
+    log("ALARM!");
     state = ALARM_ACTIVE;
     snoozing = false;
 }
@@ -41,16 +42,16 @@ bool AlarmClockModel::is_alarm_active() {
 void AlarmClockModel::increase_value() {
     if (state == SET_TIME_HOUR) {
         hour_offset = (hour_offset + 1) % 24;
-        printf("hour offset is now %d\n", hour_offset);
+        log("hour offset is now %d", hour_offset);
     } else if (state == SET_TIME_MINUTES) {
         minute_offset = (minute_offset + 1) % 60;
-        printf("minute offset is now %d\n", minute_offset);
+        log("minute offset is now %d", minute_offset);
     } else if (state == SET_ALARM_HOUR) {
         alarm_hour = (alarm_hour + 1) % 24;
-        printf("alarm hour is now %d\n", alarm_hour);
+        log("alarm hour is now %d", alarm_hour);
     } else if (state == SET_ALARM_MINUTES) {
         alarm_minute = (alarm_minute + 1) % 60;
-        printf("alarm minute is now %d\n", alarm_minute);
+        log("alarm minute is now %d", alarm_minute);
     }
 }
 

@@ -5,6 +5,7 @@
 #include "pico/stdlib.h"
 #include "constants.h"
 #include "util/clockfunctions.h"
+#include "util/logger.h"
 #include "hardware/gpio.h"
 #include <chrono>
 #include <functional>
