@@ -3,9 +3,9 @@
 static std::queue<Event> event_queue;
 std::unordered_map<uint, Button *> Button::BUTTON_INSTANCES;
 
-Button::Button(const std::string &name, uint pin,
-               std::function<void()> callback,
-               std::function<void()> idle_callback, bool allow_hold)
+Button::Button(const std::string &name, const uint &pin,
+               const std::function<void()> callback,
+               const std::function<void()> idle_callback, const bool &allow_hold)
     : name(name), pin(pin), callback(callback), idle_callback(idle_callback),
       allow_hold(allow_hold) {
     gpio_init(pin);
@@ -30,21 +30,21 @@ void Button::gpio_callback(uint gpio, uint32_t events) {
 
 void Button::process_events(void) {
     size_t eventcount = event_queue.size();
-    if (eventcount > 0){
-        log("processing %d button events.", eventcount); 
-    }
     while (!event_queue.empty()) {
         Event event = event_queue.front();
         event_queue.pop();
         if (BUTTON_INSTANCES.find(event.pin) != BUTTON_INSTANCES.end()) {
-            BUTTON_INSTANCES[event.pin]->handle_interrupt();
+            auto button = BUTTON_INSTANCES[event.pin];
+            button->handle_interrupt();
+        } else {
+            log("ERROR could not find button instance for pin %s", event.pin);
         }
     }
 }
 
 bool Button::is_held() { return (gpio_get(pin) == 0); }
 
-Time Button::last_button_press_time() const { return last_press_time; }
+Time Button::get_last_button_press_time() { return last_press_time; }
 
 bool Button::is_debounced(Time &now) {
     auto diff = now.difference_with(last_press_time);
@@ -52,39 +52,37 @@ bool Button::is_debounced(Time &now) {
         last_press_time = now;
         return true;
     }
-    log("button bounce detected");
     return false;
 }
 
 void Button::handle_interrupt() {
     Time now = Time::now();
+    // last button press should be some ms ago to prevent a bouncing
+    // signal triggering this function repeatedly
     if (!is_debounced(now)) {
-        log("debounced button click");
         return;
     }
 
-    log("%s button press", name);
     callback();
 
     if (allow_hold) {
-        log("   %s button is held down:", name);
         uint64_t hold_start_ms = now.to_total_ms();
+        Time last_handled = Time::now();
         while (gpio_get(pin) == 0) {
             Time current_time = Time::now();
             uint64_t elapsed_ms = current_time.to_total_ms() - hold_start_ms;
-
             if (elapsed_ms > BUTTON_HOLD_INITIAL_DELAY_MS) { // 300 ms hold delay before auto-trigger
-                //if (elapsed_ms % 10 == 0) { // no idea why this value is so low
-                log("   .. calling %s button hold callback", name);
-                callback();
-               //}
+                uint64_t last_handled_duration = current_time.difference_with(last_handled).to_total_ms();
+                if (last_handled_duration > BUTTON_HOLD_REPEAT_DELAY_MS) {
+                    callback();
+                    last_handled = current_time;
+                }
             }
             if (idle_callback) {
                 idle_callback();
             }
-            sleep_us(BUTTON_HOLD_REPEAT_DELAY_MS);
+            sleep_us(ALARMCLOCK_LOOP_SLEEP_US);
         }
-        log("done handling %s button hold", name);
     }
     last_press_time = Time::now();
 }

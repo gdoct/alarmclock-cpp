@@ -17,16 +17,16 @@ public:
       : Display(display->get_brightness()), display(display),
         display_brightness_direction(1){}
 
-  void update(AlarmClockModel &model, Time &current_time);
-  void increase_brightness();
-  void write(const std::string &text);
-  void clear();
-  void set_brightness(float brightness);
-  float get_brightness() const;
+  void  clear(void);
+  void  update(std::unique_ptr<AlarmClockState> model, Time &current_time);
+  void  increase_brightness(void);
+  float get_brightness(void) const;
+  void  set_brightness(const float &brightness);
 
 private:
   Display *display;
   int display_brightness_direction;
+  void write(const std::string &text);
 };
 
 #endif // ALARMCLOCKVIEW_H

@@ -72,11 +72,11 @@ void SevenSegmentDisplay::disable_digit(uint digit_pin) {
     gpio_put(digit_pin, 1);
 }
 
-void SevenSegmentDisplay::activate_digit(int digit_id) {
+void SevenSegmentDisplay::activate_digit(uint digit_id) {
     enable_digit(digits_pins[digit_id]);
 }
 
-void SevenSegmentDisplay::set_digit(int digit_id, char value, bool add_dot) {
+void SevenSegmentDisplay::set_digit(uint digit_id, char value, bool add_dot) {
     clear();
     if (digit_id >= 0 && digit_id < digits_pins.size() &&
         segment_map.find(value) != segment_map.end()) {

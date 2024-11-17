@@ -1,6 +1,6 @@
 #include "rgbled.h"
 
-RgbLed::RgbLed(uint pin_r, uint pin_g, uint pin_b, uint freq)
+RgbLed::RgbLed(const uint &pin_r, const uint &pin_g, const uint &pin_b, const uint &freq)
     : pin_r(pin_r), pin_g(pin_g), pin_b(pin_b), light_on(false) {
     gpio_set_function(pin_r, GPIO_FUNC_PWM);
     gpio_set_function(pin_g, GPIO_FUNC_PWM);
@@ -43,14 +43,14 @@ void RgbLed::off() {
     light_on = false;
 }
 
-void RgbLed::set_rgb_u16(uint16_t r, uint16_t g, uint16_t b) {
+void RgbLed::set_rgb_u16(const uint16_t &r, const uint16_t &g, const uint16_t &b) {
     pwm_set_gpio_level(pin_r, r);
     pwm_set_gpio_level(pin_g, g);
     pwm_set_gpio_level(pin_b, b);
     light_on = r > 0 || g > 0 || b > 0;
 }
 
-void RgbLed::set_rgb_u8(uint8_t r, uint8_t g, uint8_t b, uint8_t intensity) {
+void RgbLed::set_rgb_u8(const uint8_t &r, const uint8_t &g, const uint8_t &b, const uint8_t &intensity) {
     float u8_max_f = static_cast<float>(LED_INTENSITY_MAX);
     float factor = (UINT16_MAX / u8_max_f) * (intensity / u8_max_f);
     uint16_t scaled_r = static_cast<uint16_t>(r * factor);

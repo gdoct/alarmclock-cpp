@@ -10,39 +10,11 @@ const std::vector<uint> SEGMENT_DISPLAY_GPIO_PINS = {14, 10, 19, 17,
                                                      16, 13, 20, 18};
 // GPIO pins for digits in reverse order: 4, 3, 2, 1
 const std::vector<uint> SEGMENT_DISPLAY_DIGITSELECT_GPIO_PINS = {15, 12, 11, 21};
-// void stall_startup(AlarmClockController &alarmclock, Display *display) {
-//     std::vector<std::string> chars = {
-//         " ", " ", " ", " ", "g", "u", "I", "d", "O",
-//         " ", "C", "L", "0", "C", "H", " ", " ",
-//     };
-//     int counter = 0;
-//     int idx = 0;
-//     while (alarmclock.get_flash_display()) {
-//         counter += 1;
-//         if (counter % 25 == 0) {
-//             idx += 1;
-//         }
-//         if (idx + 4 > chars.size()) {
-//             idx = 0;
-//         }
-//         std::string out = chars[idx] + chars[idx + 1] + chars[idx + 2] +
-//                           chars[idx + 3];
-
-//         display->write(out);
-//         Time now = Time::now();
-//         if (counter % 25 == 0) {
-//             log("the time is %d:%d:%d", now.hour, now.minute, now.seconds);
-//         }
-//         sleep_ms(20);
-//     }
-//     log("button detected, starting clock.");
-// }
 
 int main() {
     stdio_init_all();
     log("Starting alarm clock.");
 
-    // Initialize the SevenSegmentDisplay
     SevenSegmentDisplay display(SEGMENT_DISPLAY_GPIO_PINS,
                                 SEGMENT_DISPLAY_DIGITSELECT_GPIO_PINS, 0.6f);
     AlarmClockController alarmclock(&display);

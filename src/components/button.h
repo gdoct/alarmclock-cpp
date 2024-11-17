@@ -21,16 +21,15 @@ struct Event {
   
 class Button {
   public:
-    Button(const std::string &name, uint pin, std::function<void()> callback,
-           std::function<void()> idle_callback = nullptr,
-           bool allow_hold = false);
+    Button(const std::string &name, const uint &pin, const std::function<void()> callback,
+           const std::function<void()> idle_callback = nullptr,
+           const bool &allow_hold = false);
 
     ~Button();
 
-    bool is_held();
-    static bool is_any_button_held();
-    Time last_button_press_time() const;
-    
+    bool is_held(void);
+    Time get_last_button_press_time(void);
+    static bool is_any_button_held(void);
     static void process_events(void);
 
   private:
@@ -43,7 +42,7 @@ class Button {
     bool allow_hold;
     Time last_press_time;
 
-    void handle_interrupt();
+    void handle_interrupt(void);
     bool is_debounced(Time &now);
 
     static void gpio_callback(uint gpio, uint32_t events);

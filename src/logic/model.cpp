@@ -1,28 +1,33 @@
 #include "model.h"
-#include "util/logger.h"
+
+AlarmClockModel::AlarmClockModel()
+        : state(AlarmClockState()) {
+        state.last_button_press_time = {1,2,3,4};
+        state.has_button_down = false;
+    }
 
 int AlarmClockModel::increment_mode() {
-    state = static_cast<AlarmClockStates>((state + 1) %
-                                          AlarmClockStates::ALARM_ACTIVE);
-    if (state == SET_TIME_HOUR || state == SET_TIME_MINUTES ||
-        state == SET_ALARM_HOUR || state == SET_ALARM_MINUTES) {
-        flash_display = true;
-    } else if (state == BLANK || state == DISPLAY_TIME) {
-        flash_display = false;
+    state.mode = static_cast<AlarmClockModes>((state.mode + 1) %
+                                          AlarmClockModes::ALARM_ACTIVE);
+    if (state.mode == SET_TIME_HOUR || state.mode == SET_TIME_MINUTES ||
+        state.mode == SET_ALARM_HOUR || state.mode == SET_ALARM_MINUTES) {
+        state.flash_display = true;
+    } else if (state.mode == BLANK || state.mode == DISPLAY_TIME) {
+        state.flash_display = false;
     }
-    log("state is now %d", state);
-    return state;
+    log("state is now %d", state.mode);
+    return state.mode;
 }
 
 bool AlarmClockModel::check_alarm() {
-    if (!is_alarm_enabled) {
+    if (!state.is_alarm_enabled) {
         return false;
     }
-    if (state == ALARM_ACTIVE) {
-        return !snoozing;
+    if (state.mode == ALARM_ACTIVE) {
+        return !state.snoozing;
     }
-    if (!Time::is_alarm_triggered(hour_offset, minute_offset, alarm_hour,
-                                  alarm_minute)) {
+    if (!Time::is_alarm_triggered(state.hour_offset, state.minute_offset, state.alarm_hour,
+                                  state.alarm_minute)) {
         return false;
     }
     raise_alarm();
@@ -31,34 +36,25 @@ bool AlarmClockModel::check_alarm() {
 
 void AlarmClockModel::raise_alarm() {
     log("ALARM!");
-    state = ALARM_ACTIVE;
-    snoozing = false;
-}
-
-bool AlarmClockModel::is_alarm_active() {
-    return state == ALARM_ACTIVE && !snoozing;
+    state.mode = ALARM_ACTIVE;
+    state.snoozing = false;
 }
 
 void AlarmClockModel::increase_value() {
-    if (state == SET_TIME_HOUR) {
-        hour_offset = (hour_offset + 1) % 24;
-        log("hour offset is now %d", hour_offset);
-    } else if (state == SET_TIME_MINUTES) {
-        minute_offset = (minute_offset + 1) % 60;
-        log("minute offset is now %d", minute_offset);
-    } else if (state == SET_ALARM_HOUR) {
-        alarm_hour = (alarm_hour + 1) % 24;
-        log("alarm hour is now %d", alarm_hour);
-    } else if (state == SET_ALARM_MINUTES) {
-        alarm_minute = (alarm_minute + 1) % 60;
-        log("alarm minute is now %d", alarm_minute);
+    if (state.mode == SET_TIME_HOUR) {
+        state.hour_offset = (state.hour_offset + 1) % 24;
+        log("hour offset is now %d", state.hour_offset);
+    } else if (state.mode == SET_TIME_MINUTES) {
+        state.minute_offset = (state.minute_offset + 1) % 60;
+        log("minute offset is now %d", state.minute_offset);
+    } else if (state.mode == SET_ALARM_HOUR) {
+        state.alarm_hour = (state.alarm_hour + 1) % 24;
+        log("alarm hour is now %d", state.alarm_hour);
+    } else if (state.mode == SET_ALARM_MINUTES) {
+        state.alarm_minute = (state.alarm_minute + 1) % 60;
+        log("alarm minute is now %d", state.alarm_minute);
     }
 }
-
-// int AlarmClockModel::get_hour_offset() { return hour_offset; }
-// int AlarmClockModel::get_minute_offset() { return minute_offset; }
-// int AlarmClockModel::get_alarm_hour() { return alarm_hour; }
-// int AlarmClockModel::get_alarm_minute() { return alarm_minute; }
-// bool AlarmClockModel::get_light_on() { return light_on; }
-// bool AlarmClockModel::get_snoozing() { return snoozing; }
-// bool AlarmClockModel::get_flash_display() { return flash_display; }
+std::unique_ptr<AlarmClockState> AlarmClockModel::get_state() {
+   return std::make_unique<AlarmClockState>(state);
+}
