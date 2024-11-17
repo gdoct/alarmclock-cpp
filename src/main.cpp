@@ -1,45 +1,59 @@
-#include <stdio.h>
+#include "components/sevsegdisplay.h"
+#include "logic/controller.h"
 #include "pico/stdlib.h"
-#include "hardware/timer.h"
-#include "hardware/watchdog.h"
-#include "hardware/clocks.h"
+#include "util/clockfunctions.h"
+#include <vector>
 
-int64_t alarm_callback(alarm_id_t id, void *user_data) {
-    // Put your timeout handler code in here
-    return 0;
+// GPIO pins for segments A, B, C, D, E, F, G, Dp
+const std::vector<uint> SEGMENT_DISPLAY_GPIO_PINS = {14, 10, 19, 17,
+                                                     16, 13, 20, 18};
+// GPIO pins for digits in reverse order: 4, 3, 2, 1
+const std::vector<uint> SEGMENT_DISPLAY_DIGITSELECT_GPIO_PINS = {15, 12, 11,
+                                                                 21};
+void stall_startup(AlarmClockController &alarmclock, Display *display) {
+    std::vector<std::string> chars = {
+        " ", " ", " ", " ", "g", "u", "I", "d", "O",
+        " ", "C", "L", "0", "C", "H", " ", " ",
+    };
+    int counter = 0;
+    int idx = 0;
+    while (alarmclock.get_flash_display()) {
+        counter += 1;
+        if (counter % 25 == 0) {
+            idx += 1;
+        }
+        if (idx + 4 > chars.size()) {
+            idx = 0;
+        }
+        std::string out = chars[idx] + chars[idx + 1] + chars[idx + 2] +
+                          chars[idx + 3];
+
+        display->write(out);
+        Time now = Time::now();
+        if (counter % 25 == 0) {
+            printf("the time is %d:%d:%d", now.hour, now.minute, now.seconds);
+        }
+        sleep_ms(20);
+    }
+    printf("button detected, starting clock.\n");
 }
 
-
-
-
-
-int main()
-{
+int main() {
     stdio_init_all();
+    printf("Starting alarm clock.\n");
 
-    // Timer example code - This example fires off the callback after 2000ms
-    add_alarm_in_ms(2000, alarm_callback, NULL, false);
-    // For more examples of timer use see https://github.com/raspberrypi/pico-examples/tree/master/timer
-
-    // Watchdog example code
-    if (watchdog_caused_reboot()) {
-        printf("Rebooted by Watchdog!\n");
-        // Whatever action you may take if a watchdog caused a reboot
+    // Initialize the SevenSegmentDisplay
+    SevenSegmentDisplay display(SEGMENT_DISPLAY_GPIO_PINS,
+                                SEGMENT_DISPLAY_DIGITSELECT_GPIO_PINS, 0.6f);
+    AlarmClockController alarmclock(&display);
+    Time::reset_hardware_time();
+    try {
+        alarmclock.run_alarm_clock_loop();
+    } catch (const std::exception &e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    } catch (...) {
+        std::cerr << "Unknown exception caught" << std::endl;
     }
-    
-    // Enable the watchdog, requiring the watchdog to be updated every 100ms or the chip will reboot
-    // second arg is pause on debug which means the watchdog will pause when stepping through code
-    watchdog_enable(100, 1);
-    
-    // You need to call this function at least more often than the 100ms in the enable call to prevent a reboot
-    watchdog_update();
-
-    printf("System Clock Frequency is %d Hz\n", clock_get_hz(clk_sys));
-    printf("USB Clock Frequency is %d Hz\n", clock_get_hz(clk_usb));
-    // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
-
-    while (true) {
-        printf("Hell0, world!\n");
-        sleep_ms(1000);
-    }
+    printf("machinata terminatem es\n");
+    return 0;
 }
