@@ -25,7 +25,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto=auto -fno-rtti -fno-exceptions -ffunction
 
 include(pico_sdk_import.cmake)
 project(alarmclock-cpp C CXX ASM)
-set(PICO_CXX_ENABLE_EXCEPTIONS 1)
+set(PICO_CXX_ENABLE_EXCEPTIONS 0)
 pico_sdk_init()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/target)
 file(GLOB_RECURSE SOURCES src/*.cpp)
@@ -47,7 +47,6 @@ target_link_libraries(alarmclock-cpp
     hardware_watchdog
     hardware_clocks
 )
-
 
 pico_add_extra_outputs(alarmclock-cpp)
 
