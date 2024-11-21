@@ -1,7 +1,6 @@
 # Raspberry Pi Pico Wakeup light Project
 
-This project demonstrates how to use a 5461AS-1 4-digit 7-segment display with a Raspberry Pi Pico, including 
-button control and a LED indicator, to build a retro alarmclock with wake-up light.
+This project demonstrates how to use a 5461AS-1 4-digit 7-segment display with a Raspberry Pi Pico, 4 buttons, a bunch of esistors and an RGB led, to build a retro alarmclock with wake-up light.
 
 ## Components and Pins
 
