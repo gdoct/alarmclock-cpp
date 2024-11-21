@@ -19,21 +19,20 @@ output is available through a serial over usb connection.
 ### Raspberry Pi Pico GPIO Connections
 
 #### 7-Segment Display Connections
-**Top Pins (from left to right):**
-- GPIO13 - Segment 1
-- GPIO2 - Segment 2
-- GPIO7 - Segment 3
+- GPIO15 - Segment 1
+- GPIO14 - Segment 2
+- GPIO13 - Segment 3
 - GPIO12 - Segment 4
 - GPIO11 - Segment 5
-- GPIO3 - Segment 6
+- GPIO10 - Segment 6
 
 **Bottom Pins (from left to right):**
-- GPIO6 - Segment 7
-- GPIO5 - Segment 8
-- GPIO9 - Segment 9
-- GPIO4 - Segment 10
-- GPIO8 - Segment 11
-- GPIO10 - Segment 12
+- GPIO16 - Segment 7
+- GPIO17 - Segment 8
+- GPIO18 - Segment 9
+- GPIO19 - Segment 10
+- GPIO20 - Segment 11
+- GPIO21 - Segment 12
 
 #### Control Buttons
 - **SNOOZE_PIN**: GPIO 14
@@ -42,7 +41,7 @@ output is available through a serial over usb connection.
 - **LIGHT_PIN**: GPIO 17
 
 #### LED Light
-- **LED**: GPIO 18 (with a 120 ohm current-limiting resistor)
+- **LED**: GPIO 5-7 (with a 220 ohm current-limiting resistor)
 
 ## Breadboard Layout
 ![Component layout](https://github.com/gdoct/alarmclock-cpp/blob/master/docs/physical_layout.png "Component layout")
@@ -70,7 +69,7 @@ output is available through a serial over usb connection.
    - INCREASE_PIN: GPIO 16
    - LIGHT_PIN: GPIO 17
    - Other leg of each button to ground (GND). Use pull-up resistors if necessary, although internal pull-ups in the Pico may be used.
-4. **Connect the LED Light**:
-   - GPIO 18 to the anode of the LED with a current-limiting resistor
+4. **Connect the RGB LED Light**:
+   - GPIO 5-7 to the anodes of the  RGBLED with a 220 ohm current-limiting resistor
    - Cathode of the LED to ground (GND)
 
