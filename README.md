@@ -9,9 +9,9 @@ $ cmake -DCMAKE_BUILD_TYPE=Release .
 $ make clean && make
 ```
 
-the resulting elf and uf2 binaries will be placed in the folder "target". connect 
-the pico while holding down boot-select and copy the uf2 file to the pico. Debug 
-output is available through a serial over usb connection.
+the resulting elf and uf2 binaries will be placed in the folder "target". 
+connect the pico while holding down boot-select and copy the uf2 file to the pico. 
+_Debug output is available through a serial over usb connection._
 
 ## Components and Pins
 
@@ -41,7 +41,7 @@ output is available through a serial over usb connection.
 - **LIGHT_PIN**: GPIO 17
 
 #### LED Light
-- **LED**: GPIO 5-7 (with a 220 ohm current-limiting resistor)
+- **LED**: GPIO 7, 8 and 9
 
 ## Breadboard Layout
 ![Component layout](https://github.com/gdoct/alarmclock-cpp/blob/master/docs/physical_layout.png "Component layout")
@@ -68,8 +68,8 @@ output is available through a serial over usb connection.
    - MODE_PIN: GPIO 15
    - INCREASE_PIN: GPIO 16
    - LIGHT_PIN: GPIO 17
-   - Other leg of each button to ground (GND). Use pull-up resistors if necessary, although internal pull-ups in the Pico may be used.
+   - Other leg of each button to ground (GND). Use 10k ohm pull-up resistors if necessary, although internal pull-ups in the Pico may be used.
 4. **Connect the RGB LED Light**:
-   - GPIO 5-7 to the anodes of the  RGBLED with a 220 ohm current-limiting resistor
-   - Cathode of the LED to ground (GND)
+   - Connect GPIO 7, 8 and 9 to the anodes of the RGB LED with a 220 ohm current-limiting resistor
+   - Connect the cathode of the LED to ground (GND)
 
