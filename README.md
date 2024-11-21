@@ -15,6 +15,7 @@ output is available through a serial over usb connection.
 
 ## Components and Pins
 
+![Breadboard layout](https://github.com/gdoct/alarmclock-cpp/blob/master/docs/breadboard.png "Breadboard image")
 ### Raspberry Pi Pico GPIO Connections
 
 #### 7-Segment Display Connections
@@ -44,6 +45,7 @@ output is available through a serial over usb connection.
 - **LED**: GPIO 18 (with a 120 ohm current-limiting resistor)
 
 ## Breadboard Layout
+![Component layout](https://github.com/gdoct/alarmclock-cpp/blob/master/docs/physical_layout.png "Component layout")
 
 ### Steps to Create the Breadboard Layout:
 1. **Place the Raspberry Pi Pico 2 on the Breadboard**: Ensure it's firmly seated with access to its GPIO pins.
