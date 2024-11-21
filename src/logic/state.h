@@ -1,6 +1,6 @@
 #pragma once
 
-#include "util/clockfunctions.h"
+#include "time/clock.h"
 #include <chrono>
 #include <cstdint>
 #include <iostream>
@@ -18,18 +18,7 @@ enum AlarmClockModes {
 };
 
 struct AlarmClockState {
-    AlarmClockModes mode;
-    int hour_offset;
-    int minute_offset;
-    int alarm_hour;
-    int alarm_minute;
-    bool light_on;
-    bool snoozing;
-    bool flash_display;
-    bool has_button_down;
-    bool is_alarm_enabled;
-    Time last_button_press_time;
-
+public:
     AlarmClockState();
 
     bool is_alarm_active() const;
@@ -65,6 +54,20 @@ struct AlarmClockState {
     bool get_is_alarm_enabled() const;
     void set_is_alarm_enabled(bool is_alarm_enabled);
 
-    Time get_last_button_press_time() const;
-    void set_last_button_press_time(const Time &last_button_press_time);
+    volatile RawTime get_last_button_press_time() const;
+    void set_last_button_press_time(RawTime last_button_press_time);
+
+private:
+    AlarmClockModes mode;
+    int hour_offset;
+    int minute_offset;
+    int alarm_hour;
+    int alarm_minute;
+    bool light_on;
+    bool snoozing;
+    bool flash_display;
+    bool has_button_down;
+    bool is_alarm_enabled;
+    volatile RawTime last_button_press_time;
+
 };

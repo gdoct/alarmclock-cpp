@@ -3,11 +3,12 @@
 #include <cstdio>
 #include <cstdarg>
 #include <iostream>
-#include "clockfunctions.h"
+#include "time/clock.h"
 
 template<typename... Args>
-static void log(const char* format, Args... args) {
-    auto now = Time::now();
+static void 
+log(const char* format, Args... args) {
+    auto now = Clock::now();
     printf("[%02d:%02d:%02d.%03d] ", now.hour, now.minute, now.seconds, now.subseconds);
     printf(format, args...);
     printf("\n");

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SEVENSEGMENTDISPLAY_H
-#define SEVENSEGMENTDISPLAY_H
 
 #include "display.h"
 #include "constants.h"
@@ -22,7 +20,6 @@ class SevenSegmentDisplay : public Display {
   private:
     static std::unordered_map<char, uint8_t> segment_map;
 
-
     std::vector<uint> segments_pins;
     std::vector<uint> digits_pins;
 
@@ -30,7 +27,4 @@ class SevenSegmentDisplay : public Display {
     void disable_digit(uint digit_pin);
     void activate_digit(uint digit_id);
     void set_digit(uint digit_id, char value, bool add_dot);
-
 };
-
-#endif // SEVENSEGMENTDISPLAY_H

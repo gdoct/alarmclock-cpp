@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.13)
 
+set(CXX /usr/bin/g++)
+set(CMAKE_CXX_COMPILER /usr/bin/g++)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
 
 # == DO NOT EDIT THE FOLLOWING LINES for the Raspberry Pi Pico VS Code Extension to work ==
 if(WIN32)
@@ -19,6 +21,7 @@ if (EXISTS ${picoVscode})
 endif()
 # ====================================================================================
 set(PICO_BOARD pico2 CACHE STRING "Board type")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto=auto -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -DNDEBUG -s ")
 
 include(pico_sdk_import.cmake)
 project(alarmclock-cpp C CXX ASM)
@@ -38,6 +41,7 @@ target_include_directories(alarmclock-cpp PRIVATE
 )
 target_link_libraries(alarmclock-cpp 
     pico_stdlib 
+    pico_multicore
     hardware_pwm
     hardware_timer
     hardware_watchdog

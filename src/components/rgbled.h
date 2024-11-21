@@ -16,9 +16,9 @@ public:
   void set_light_u8(const uint8_t &value, const uint8_t &intensity) { set_rgb_u8(value, value, value, intensity); }
   bool is_led_on(void);
 
-  RgbLed(const uint &pin_r = LEDLIGHT_R_PIN, 
-         const uint &pin_g = LEDLIGHT_G_PIN,
-         const uint &pin_b = LEDLIGHT_B_PIN,
+  RgbLed(const uint &pin_r, 
+         const uint &pin_g,
+         const uint &pin_b,
          const uint &freq = 500);
 
 private:

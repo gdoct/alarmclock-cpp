@@ -25,7 +25,8 @@ RgbLed::RgbLed(const uint &pin_r, const uint &pin_g, const uint &pin_b, const ui
     set_light_u16(0);
 }
 
-void RgbLed::toggle() {
+void 
+RgbLed::toggle(void) {
     if (light_on) {
         off();
     } else {
@@ -33,25 +34,29 @@ void RgbLed::toggle() {
     }
 }
 
-void RgbLed::on() {
+void 
+RgbLed::on(void) {
     set_light_u8(1, 1);
     light_on = true;
 }
 
-void RgbLed::off() {
+void 
+RgbLed::off(void) {
     set_light_u8(0, 0);
     light_on = false;
 }
 
-void RgbLed::set_rgb_u16(const uint16_t &r, const uint16_t &g, const uint16_t &b) {
+void 
+RgbLed::set_rgb_u16(const uint16_t &r, const uint16_t &g, const uint16_t &b) {
     pwm_set_gpio_level(pin_r, r);
     pwm_set_gpio_level(pin_g, g);
     pwm_set_gpio_level(pin_b, b);
     light_on = r > 0 || g > 0 || b > 0;
 }
 
-void RgbLed::set_rgb_u8(const uint8_t &r, const uint8_t &g, const uint8_t &b, const uint8_t &intensity) {
-    float u8_max_f = static_cast<float>(LED_INTENSITY_MAX);
+void 
+RgbLed::set_rgb_u8(const uint8_t &r, const uint8_t &g, const uint8_t &b, const uint8_t &intensity) {
+    float u8_max_f = static_cast<float>(Constants::LED_INTENSITY_MAX);
     float factor = (UINT16_MAX / u8_max_f) * (intensity / u8_max_f);
     uint16_t scaled_r = static_cast<uint16_t>(r * factor);
     uint16_t scaled_g = static_cast<uint16_t>(g * factor);
@@ -64,4 +69,5 @@ void RgbLed::set_rgb_u8(const uint8_t &r, const uint8_t &g, const uint8_t &b, co
     light_on = (r > 0 || g > 0 || b > 0) && intensity > 0;
 }
 
-bool RgbLed::is_led_on() { return light_on; }
+bool 
+RgbLed::is_led_on(void) { return light_on; }
